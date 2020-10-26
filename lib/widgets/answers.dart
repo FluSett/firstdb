@@ -2,7 +2,12 @@ import 'package:firstdb/db/get_answers.dart';
 import 'package:flutter/material.dart';
 import 'package:firstdb/models/answers_api.dart';
 
-class Answers {
+class Answers extends StatefulWidget {
+  @override
+  AnswersState createState() => AnswersState();
+}
+
+class AnswersState extends State<Answers> {
   List<Answer1> _answer1;
   List<Answer2> _answer2;
   List<Answer3> _answer3;
@@ -25,22 +30,67 @@ class Answers {
   List a9;
   List a10;
 
-  Widget widgetAnswer1(double height) {
-    return FutureBuilder(
-        future: fetchAnswer1(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasData) {
-            _answer1 = snapshot.data;
-            return Column(children: [
-              Text(
-                _answer1.map((item) => item.answer1).toList().toString(),
-                style: TextStyle(fontSize: height * 0.03),
-              )
-            ]);
-          } else {
-            return CircularProgressIndicator();
-          }
+  Widget widgetAnswer1(
+      double height, double width, String _mysql, String _question) {
+    bool _isActive = false;
+    return ExpansionPanelList(
+      expansionCallback: (index, expanded) {
+        setState(() {
+        _isActive = !_isActive;
         });
+      },
+      children: <ExpansionPanel>[
+        ExpansionPanel(
+          headerBuilder: (context, isExpanded) {
+            return ListTile(
+              title: Text(
+                _question,
+                style: TextStyle(
+                  fontSize: height * 0.025,
+                ),
+              ),
+            );
+          },
+          body: Container(
+            child: Column(
+              children: [
+                Container(
+                  padding:
+                      EdgeInsets.only(left: width * 0.04, right: width * 0.02),
+                  child: Text(
+                    _mysql,
+                    style: TextStyle(
+                      fontSize: height * 0.025,
+                    ),
+                  ),
+                ),
+                SizedBox(height: height * 0.02),
+                FutureBuilder(
+                    future: fetchAnswer1(),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        _answer1 = snapshot.data;
+                        return Column(children: [
+                          Text(
+                            _answer1
+                                .map((item) => item.answer1)
+                                .toList()
+                                .toString(),
+                            style: TextStyle(fontSize: height * 0.03),
+                          )
+                        ]);
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    }),
+                SizedBox(height: height * 0.03),
+              ],
+            ),
+          ),
+          isExpanded: _isActive,
+        ),
+      ],
+    );
   }
 
   Widget widgetAnswer2(double height) {
@@ -149,7 +199,10 @@ class Answers {
     return Column(
       children: [
         Center(
-          child: Text('Виберіть дату', style: TextStyle(fontSize: height * 0.03),),
+          child: Text(
+            'Виберіть дату',
+            style: TextStyle(fontSize: height * 0.03),
+          ),
         ),
         SizedBox(height: height * 0.04),
         Row(
@@ -158,10 +211,16 @@ class Answers {
             Container(
               child: Column(
                 children: [
-                  Text('З цієї дати', style: TextStyle(fontSize: height * 0.03),),
+                  Text(
+                    'З цієї дати',
+                    style: TextStyle(fontSize: height * 0.03),
+                  ),
                   RaisedButton(
                     color: Colors.blueAccent,
-                    child: Text('Вибрати дату', style: TextStyle(fontSize: height * 0.03),),
+                    child: Text(
+                      'Вибрати дату',
+                      style: TextStyle(fontSize: height * 0.03),
+                    ),
                     onPressed: () {
                       showDatePicker(
                         context: context,
@@ -176,14 +235,22 @@ class Answers {
                 ],
               ),
             ),
-            SizedBox(width: width * 0.07,),
+            SizedBox(
+              width: width * 0.07,
+            ),
             Container(
               child: Column(
                 children: [
-                  Text('До цієї дати', style: TextStyle(fontSize: height * 0.03),),
+                  Text(
+                    'До цієї дати',
+                    style: TextStyle(fontSize: height * 0.03),
+                  ),
                   RaisedButton(
                     color: Colors.blueAccent,
-                    child: Text('Вибрати дату', style: TextStyle(fontSize: height * 0.03),),
+                    child: Text(
+                      'Вибрати дату',
+                      style: TextStyle(fontSize: height * 0.03),
+                    ),
                     onPressed: () {
                       showDatePicker(
                         context: context,
@@ -316,5 +383,9 @@ class Answers {
             return CircularProgressIndicator();
           }
         });
+  }
+
+  Widget build(BuildContext context) {
+    return Scaffold();
   }
 }
