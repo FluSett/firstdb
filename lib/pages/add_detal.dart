@@ -180,7 +180,7 @@ class _AddDetalPageState extends State<AddDetalPage> {
                 ],
               ),
             ),
-            SizedBox(height: height * 0.12),
+            SizedBox(height: height * 0.02),
             Container(
               height: height * 0.1,
               width: width * 0.6,

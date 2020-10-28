@@ -114,7 +114,7 @@ class _AddReestrPageState extends State<AddReestrPage> {
                   if (snapshot.hasData) {
                     _detals = snapshot.data;
                     return Container(
-                      width: width * 0.4,
+                      width: width * 0.5,
                       child: DropdownButton(
                         value: _selectedKodDetali,
                         hint: Text(
