@@ -16,7 +16,7 @@ Future<List<Answer2>> fetchAnswer2() async {
 Future<List<Answer3>> fetchAnswer3() async {
   String url = 'https://dbserverproject.000webhostapp.com/answers/answer3.php';
   final response = await http.get(url);
-  return answer3FromJson(response.body).toList();
+  return answer3FromJson(response.body);
 }
 
 Future<List<Answer4>> fetchAnswer4() async {

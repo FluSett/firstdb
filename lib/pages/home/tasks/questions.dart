@@ -14,12 +14,9 @@ class QuestionsPage extends StatefulWidget {
 }
 
 class _QuestionsPageState extends State<QuestionsPage> {
-  String _selectedKodDetali;
-
   List<Answer1> _answer1;
   List<Answer2> _answer2;
-  Future<List<Answer3>> _answer3;
-  List<Answer3> _answer3x1;
+  List<Answer3> _answer3;
   List<Answer4> _answer4;
   List<Answer5> _answer5;
   List<Answer6> _answer6;
@@ -27,7 +24,6 @@ class _QuestionsPageState extends State<QuestionsPage> {
   List<Answer8> _answer8;
   List<Answer9> _answer9;
   List<Answer10> _answer10;
-  List<Detal> _detals;
 
   bool _isActive1 = false;
   bool _isActive2 = false;
@@ -39,23 +35,6 @@ class _QuestionsPageState extends State<QuestionsPage> {
   bool _isActive8 = false;
   bool _isActive9 = false;
   bool _isActive10 = false;
-  bool _isData = false;
-
-  DateTime _firstDate;
-  DateTime _secondDate;
-
-  void getAnswer3() async {
-    var url = "https://dbserverproject.000webhostapp.com/answers/answer3.php";
-    var data = {
-      "kodDetali": _selectedKodDetali,
-    };
-
-    var res = await http.post(url, body: data);
-
-    setState(() {
-      _isData = true;
-    });
-  }
 
   Widget widgetAnswer1(
       double height, double width, String _mysql, String _question) {
@@ -204,40 +183,6 @@ class _QuestionsPageState extends State<QuestionsPage> {
           body: Container(
             child: Column(
               children: [
-                FutureBuilder(
-                    future: fetchDetals(),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData) {
-                        _detals = snapshot.data;
-                        return Container(
-                          width: width * 0.4,
-                          child: DropdownButton(
-                            value: _selectedKodDetali,
-                            hint: Text(
-                              'Виберіть код деталі',
-                              style: TextStyle(fontSize: width * 0.04),
-                            ),
-                            items: _detals.map((e) {
-                              return DropdownMenuItem(
-                                child: Text(
-                                  e.kodDetali,
-                                  style: TextStyle(fontSize: width * 0.04),
-                                ),
-                                value: e.kodDetali.toString(),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedKodDetali = value;
-                              });
-                            },
-                          ),
-                        );
-                      } else {
-                        return CircularProgressIndicator();
-                      }
-                    }),
-                SizedBox(height: height * 0.02),
                 Container(
                   padding:
                       EdgeInsets.only(left: width * 0.04, right: width * 0.02),
@@ -249,25 +194,14 @@ class _QuestionsPageState extends State<QuestionsPage> {
                   ),
                 ),
                 SizedBox(height: height * 0.02),
-                RaisedButton(
-                  onPressed: getAnswer3,
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    getAnswer3();
-                    setState(() {
-                      _answer3 = fetchAnswer3();
-                    });
-                  },
-                ),
                 FutureBuilder(
-                    future: _answer3,
+                    future: fetchAnswer3(),
                     builder: (BuildContext context, AsyncSnapshot snapshot) {
                       if (snapshot.hasData) {
-                        _answer3x1 = snapshot.data;
+                        _answer3 = snapshot.data;
                         return Column(children: [
                           Text(
-                            _answer3x1
+                            _answer3
                                 .map((item) => item.answer3)
                                 .toList()
                                 .toString(),
@@ -523,75 +457,6 @@ class _QuestionsPageState extends State<QuestionsPage> {
                 SizedBox(height: height * 0.02),
                 Column(
                   children: [
-                    Center(
-                      child: Text(
-                        'Виберіть дату',
-                        style: TextStyle(fontSize: height * 0.03),
-                      ),
-                    ),
-                    SizedBox(height: height * 0.04),
-                    Row(
-                      children: [
-                        SizedBox(width: width * 0.1),
-                        Container(
-                          child: Column(
-                            children: [
-                              Text(
-                                'З цієї дати',
-                                style: TextStyle(fontSize: height * 0.03),
-                              ),
-                              RaisedButton(
-                                color: Colors.blueAccent,
-                                child: Text(
-                                  'Вибрати дату',
-                                  style: TextStyle(fontSize: height * 0.03),
-                                ),
-                                onPressed: () {
-                                  showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(1990),
-                                    lastDate: DateTime(2021),
-                                  ).then((value) {
-                                    _firstDate = value;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: width * 0.07,
-                        ),
-                        Container(
-                          child: Column(
-                            children: [
-                              Text(
-                                'До цієї дати',
-                                style: TextStyle(fontSize: height * 0.03),
-                              ),
-                              RaisedButton(
-                                color: Colors.blueAccent,
-                                child: Text(
-                                  'Вибрати дату',
-                                  style: TextStyle(fontSize: height * 0.03),
-                                ),
-                                onPressed: () {
-                                  showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(1990),
-                                    lastDate: DateTime(2021),
-                                  ).then((value) {
-                                    _secondDate = value;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
                     FutureBuilder(
                         future: fetchAnswer7(),
                         builder:
@@ -878,8 +743,8 @@ class _QuestionsPageState extends State<QuestionsPage> {
             widgetAnswer3(
               height,
               width,
-              'SELECT nayavnaKilkist FROM detal WHERE kodDetali = \$kodDetali;',
-              '3: Скільки таких деталей в наявності? /Не готово/',
+              'SELECT nayavnaKilkist FROM detal WHERE kodDetali = 1002;',
+              '3: Скільки таких деталей в наявності?',
             ),
             SizedBox(height: height * 0.03),
             widgetAnswer4(
@@ -901,7 +766,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                 height,
                 width,
                 'SELECT kodDetali, dataZamovlennya FROM reestr WHERE dataZamovlennya BETWEEN \'2000.10.10\' AND \'2015.01.01\' GROUP BY dataZamovlennya ORDER BY dataZamovlennya;',
-                '7: Яка кількість проданого товару за період часу? /Не готово'),
+                '7: Яка кількість проданого товару за період часу?'),
             SizedBox(height: height * 0.03),
             widgetAnswer8(
                 height,
